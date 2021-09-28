@@ -1,0 +1,33 @@
+name: Publish
+on: [push]
+jobs:
+  publish-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0.3.0
+        with:
+          token_format: access_token
+          workload_identity_provider: 'projects/586034454050/locations/global/workloadIdentityPools/github-pool/providers/gh-provider'
+          service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+          access_token_lifetime: '300s'
+      - name: Login to Artifact Registry
+        uses: docker/login-action@v1
+        with:
+          registry: us-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}"
+      - id: docker_push
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: us-docker.pkg.dev/omgcrapp/images/hello-action:${{ github.sha }}
