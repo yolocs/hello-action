@@ -19,6 +19,7 @@ jobs:
           workload_identity_provider: 'projects/586034454050/locations/global/workloadIdentityPools/github-pool-1/providers/github-provider-1'
           service_account: 'github@omgcrapp.iam.gserviceaccount.com'
           access_token_lifetime: '300s'
+          audience: 'sigstore'
           id_token_audience: 'https://myapp-uvehjacqzq.a.run.app'
           id_token_include_email: true
       - name: Output
