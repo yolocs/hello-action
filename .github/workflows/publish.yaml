@@ -15,28 +15,28 @@ jobs:
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@main
         with:
-          token_format: id_token
+          token_format: access_token
           workload_identity_provider: 'projects/586034454050/locations/global/workloadIdentityPools/github-pool-1/providers/github-provider-1'
           service_account: 'github@omgcrapp.iam.gserviceaccount.com'
           access_token_lifetime: '300s'
-          audience: 'sigstore'
-          id_token_audience: 'https://myapp-uvehjacqzq.a.run.app'
-          id_token_include_email: true
-      - name: Output
-        run: echo ${{ steps.auth.outputs.id_token }} > tk.txt
-      - uses: actions/upload-artifact@v2
+#           audience: 'sigstore'
+#           id_token_audience: 'https://myapp-uvehjacqzq.a.run.app'
+#           id_token_include_email: true
+#       - name: Output
+#         run: echo ${{ steps.auth.outputs.id_token }} > tk.txt
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: debug
+#           path: tk.txt
+      - name: Login to Artifact Registry
+        uses: docker/login-action@v1
         with:
-          name: debug
-          path: tk.txt
-#       - name: Login to Artifact Registry
-#         uses: docker/login-action@v1
-#         with:
-#           registry: us-docker.pkg.dev
-#           username: oauth2accesstoken
-#           password: ${{ steps.auth.outputs.access_token }}
-#       - id: docker_push
-#         name: Build and push
-#         uses: docker/build-push-action@v2
-#         with:
-#           push: true
-#           tags: us-docker.pkg.dev/omgcrapp/images/hello-action:${{ github.sha }}
+          registry: us-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+      - id: docker_push
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: us-docker.pkg.dev/omgcrapp/images/hello-action:${{ github.sha }}
