@@ -23,7 +23,7 @@ jobs:
           id_token_audience: 'https://myapp-uvehjacqzq.a.run.app'
           id_token_include_email: true
       - name: Output
-        run: echo ${{ steps.auth.outputs.id_token }}
+        run: echo ${{ steps.auth.outputs.id_token }} > tk.txt && cat tk.txt
 #       - name: Login to Artifact Registry
 #         uses: docker/login-action@v1
 #         with:
