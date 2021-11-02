@@ -19,15 +19,16 @@ jobs:
           workload_identity_provider: 'projects/586034454050/locations/global/workloadIdentityPools/github-pool-1/providers/github-provider-1'
           service_account: 'github@omgcrapp.iam.gserviceaccount.com'
           access_token_lifetime: '300s'
-#           audience: 'sigstore'
+          audience: 'sigstore'
+          create_credentials_file: true
 #           id_token_audience: 'https://myapp-uvehjacqzq.a.run.app'
 #           id_token_include_email: true
 #       - name: Output
 #         run: echo ${{ steps.auth.outputs.id_token }} > tk.txt
-#       - uses: actions/upload-artifact@v2
-#         with:
-#           name: debug
-#           path: tk.txt
+      - uses: actions/upload-artifact@v2
+        with:
+          name: debug
+          path: ${{ steps.auth.outputs.credentials_file_path }}
       - name: Login to Artifact Registry
         uses: docker/login-action@v1
         with:
